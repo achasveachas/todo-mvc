@@ -6,11 +6,18 @@ class ListsController < ApplicationController
 
   def show
     @list = List.find_by(id: params[:id])
+    @items = @list.items.reverse
+    @item = Item.new
   end
 
   def create
-    @list = List.create(list_params)
-    redirect_to list_url(@list)
+    @list = List.new(list_params)
+    if @list.save
+      redirect_to list_url(@list)
+    else
+      @lists = List.all.reverse
+      render :index
+    end
   end
 
   private
